@@ -24,8 +24,6 @@ Built with [Python](https://www.python.org/) and [Tkinter](https://docs.python.o
 
 ## Installation
 
-Tested on Python 3.11.
-
 ### Option 1: Download precompiled Windows version
 For Windows users, a standalone .exe file is available — no Python installation required.
 
@@ -34,6 +32,8 @@ For Windows users, a standalone .exe file is available — no Python installatio
 3. Run the file — no setup needed.
 
 ### Option 2: Run from source (cross-platform)
+
+Tested on Python 3.11.
 
 1. Clone the repository:
 ```bash
