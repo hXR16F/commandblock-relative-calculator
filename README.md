@@ -12,7 +12,7 @@ A lightweight desktop application for calculating relative coordinates for Minec
 
 Built with [Python](https://www.python.org/) and [Tkinter](https://docs.python.org/3/library/tkinter.html).
 
-## Features
+# Features
 
 - Calculate relative coordinates between command block and destination
 - Smart coordinates extraction using RegEx
@@ -22,16 +22,23 @@ Built with [Python](https://www.python.org/) and [Tkinter](https://docs.python.o
 - Automatically save logs to preserve previous calculations
 - Light & dark theme
 
-## Installation
+# Installation
 
-### Option 1: Download precompiled Windows version
+## Option 1: Download precompiled Windows version
+
 For Windows users, a standalone .exe file is available — no Python installation required.
 
 1. Go to the [Releases page](https://github.com/hXR16F/commandblock-relative-calculator/releases).
 2. Download the latest .exe version from the Assets section.
 3. Run the file — no setup needed.
 
-### Option 2: Run from source (cross-platform)
+> [!NOTE]
+> This program was compiled using [Nuitka](https://nuitka.net/) with the following parameters:
+> ```bash
+> python -m nuitka "commandblock-relative-calculator.py" --windows-icon-from-ico=icon.ico --onefile --enable-plugin=tk-inter --windows-console-mode=disable
+> ```
+
+## Option 2: Run from source (cross-platform)
 
 Tested on Python 3.11.
 
