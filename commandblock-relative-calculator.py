@@ -58,7 +58,7 @@ class ResultField(ttk.Frame):
         self.copy_btn.pack(side="right")
 
     def copy_to_clipboard(self):
-        pyperclip.copy(self.entry.get())
+        pyperclip.copy(" ".join(self.entry.get().split(" ")[1:]))
 
     def set(self, text):
         self.entry.configure(state="normal")
@@ -78,9 +78,9 @@ class RelativeCalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("CMD Block Relative Calculator")
-        self.root.geometry("273x440")
+        self.root.geometry("273x478")
         self.root.minsize(273, 0)
-        self.root.maxsize(0, 440)
+        self.root.maxsize(0, 478)
         self.root.attributes('-topmost', True)
         self.root.grid_columnconfigure(0, weight=1)
 
@@ -116,14 +116,17 @@ class RelativeCalculatorApp:
         self.calc_btn = ttk.Button(self.root, text="Calculate", command=self.calculate, cursor="hand2")
         self.calc_btn.grid(row=8, column=0, pady=15)
 
-        self.result_1 = ResultField(self.root, "<dst>")
+        self.result_1 = ResultField(self.root, "/setblock <dst>")
         self.result_1.grid(row=9, column=0, padx=10, pady=5, sticky="we")
 
-        self.result_2 = ResultField(self.root, "<src_1> <src_2> <dst>")
+        self.result_2 = ResultField(self.root, "/fill <src_1> <dst>")
         self.result_2.grid(row=10, column=0, padx=10, pady=5, sticky="we")
 
+        self.result_3 = ResultField(self.root, "/clone <src_1> <src_2> <dst>")
+        self.result_3.grid(row=11, column=0, padx=10, pady=5, sticky="we")
+
         ttk.Label(self.root, text="Made with ♥ by zaktabyte").grid(
-            row=11, column=0, sticky="ns", padx=10, pady=(10, 10)
+            row=12, column=0, sticky="ns", padx=10, pady=(10, 10)
         )
 
     def calculate(self):
@@ -140,15 +143,32 @@ class RelativeCalculatorApp:
 
         self.result_1.clear()
         self.result_2.clear()
+        self.result_3.clear()
 
         if cmd and dst:
             r1 = [
                 f"~{int(d) - int(c)}".replace("~0", "~")
                 for c, d in zip(cmd[0], dst[0])
             ]
-            result1_str = " ".join(r1)
+            result1_str = "/setblock " + " ".join(r1)
             self.result_1.set(result1_str)
             log("RESULT #1", result1_str)
+
+        if cmd and src1 and dst:
+            ox, oy, oz = map(int, cmd[0])
+            points = [src1[0], dst[0]]
+            result_parts = []
+
+            for point in points:
+                rel = [
+                    f"~{int(coord) - ref}".replace("~0", "~")
+                    for coord, ref in zip(point, (ox, oy, oz))
+                ]
+                result_parts.append(" ".join(rel))
+
+            result2_str = "/fill " + " ".join(result_parts)
+            self.result_2.set(result2_str)
+            log("RESULT #2", result2_str)
 
         if cmd and src1 and src2 and dst:
             ox, oy, oz = map(int, cmd[0])
@@ -162,9 +182,9 @@ class RelativeCalculatorApp:
                 ]
                 result_parts.append(" ".join(rel))
 
-            result2_str = " ".join(result_parts)
-            self.result_2.set(result2_str)
-            log("RESULT #2", result2_str)
+            result3_str = "/clone " + " ".join(result_parts)
+            self.result_3.set(result3_str)
+            log("RESULT #3", result3_str)
 
 
 # === Entry Point ===
