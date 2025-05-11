@@ -54,7 +54,8 @@ class ResultField(ttk.Frame):
         self.entry.insert(0, default_text)
         self.entry.configure(state="readonly")
         self.entry.pack(side="left", fill="x", expand=True, padx=(0, 5))
-        self.copy_btn = ttk.Button(self, text="C", command=self.copy_to_clipboard, width=2, cursor="hand2")
+        self.copy_btn = ttk.Button(
+            self, text="C", command=self.copy_to_clipboard, width=2, cursor="hand2")
         self.copy_btn.pack(side="right")
 
     def copy_to_clipboard(self):
@@ -94,7 +95,8 @@ class RelativeCalculatorApp:
         version = sys.getwindowsversion()
         is_dark = sv_ttk.get_theme() == "dark"
         if version.major == 10 and version.build >= 22000:
-            pywinstyles.change_header_color(self.root, "#1c1c1c" if is_dark else "#fafafa")
+            pywinstyles.change_header_color(
+                self.root, "#1c1c1c" if is_dark else "#fafafa")
         elif version.major == 10:
             pywinstyles.apply_style(self.root, "dark" if is_dark else "normal")
             self.root.wm_attributes("-alpha", 0.99)
@@ -113,7 +115,8 @@ class RelativeCalculatorApp:
         self.dst = LabeledEntry(self.root, "Destination:")
         self.dst.grid(row=6, column=0, padx=10, pady=5, sticky="we")
 
-        self.calc_btn = ttk.Button(self.root, text="Calculate", command=self.calculate, cursor="hand2")
+        self.calc_btn = ttk.Button(
+            self.root, text="Calculate", command=self.calculate, cursor="hand2")
         self.calc_btn.grid(row=8, column=0, pady=15)
 
         self.result_1 = ResultField(self.root, "/setblock <dst>")
@@ -130,61 +133,58 @@ class RelativeCalculatorApp:
         )
 
     def calculate(self):
-        cmd = findall(COORDS_PATTERN, self.cmd_block.get())
-        src1 = findall(COORDS_PATTERN, self.src1.get())
-        src2 = findall(COORDS_PATTERN, self.src2.get())
-        dst = findall(COORDS_PATTERN, self.dst.get())
+        def parse_coords(field):
+            value = field.get()
+            coords = findall(COORDS_PATTERN, value)
+            if coords:
+                logging.info(f"{field_label[field]}: {value}")
+            return coords
 
-        log = lambda name, val: logging.info(f"{name}: {val}")
-        if cmd: log("CMD Block", self.cmd_block.get())
-        if src1: log("Source #1", self.src1.get())
-        if src2: log("Source #2", self.src2.get())
-        if dst: log("Destination", self.dst.get())
+        def relative_coords(src, ref):
+            return [
+                f"~{int(s) - r}".replace("~0", "~")
+                for s, r in zip(src, ref)
+            ]
+
+        field_label = {
+            self.cmd_block: "CMD Block",
+            self.src1: "Source #1",
+            self.src2: "Source #2",
+            self.dst: "Destination"
+        }
+
+        cmd = parse_coords(self.cmd_block)
+        src1 = parse_coords(self.src1)
+        src2 = parse_coords(self.src2)
+        dst = parse_coords(self.dst)
 
         self.result_1.clear()
         self.result_2.clear()
         self.result_3.clear()
 
         if cmd and dst:
-            r1 = [
-                f"~{int(d) - int(c)}".replace("~0", "~")
-                for c, d in zip(cmd[0], dst[0])
-            ]
+            r1 = relative_coords(dst[0], map(int, cmd[0]))
             result1_str = "/setblock " + " ".join(r1)
             self.result_1.set(result1_str)
-            log("RESULT #1", result1_str)
+            logging.info(f"RESULT #1: {result1_str}")
 
         if cmd and src1 and dst:
-            ox, oy, oz = map(int, cmd[0])
+            ref = list(map(int, cmd[0]))
             points = [src1[0], dst[0]]
-            result_parts = []
-
-            for point in points:
-                rel = [
-                    f"~{int(coord) - ref}".replace("~0", "~")
-                    for coord, ref in zip(point, (ox, oy, oz))
-                ]
-                result_parts.append(" ".join(rel))
-
-            result2_str = "/fill " + " ".join(result_parts)
+            result2_str = "/fill " + " ".join(
+                " ".join(relative_coords(p, ref)) for p in points
+            )
             self.result_2.set(result2_str)
-            log("RESULT #2", result2_str)
+            logging.info(f"RESULT #2: {result2_str}")
 
         if cmd and src1 and src2 and dst:
-            ox, oy, oz = map(int, cmd[0])
+            ref = list(map(int, cmd[0]))
             points = [src1[0], src2[0], dst[0]]
-            result_parts = []
-
-            for point in points:
-                rel = [
-                    f"~{int(coord) - ref}".replace("~0", "~")
-                    for coord, ref in zip(point, (ox, oy, oz))
-                ]
-                result_parts.append(" ".join(rel))
-
-            result3_str = "/clone " + " ".join(result_parts)
+            result3_str = "/clone " + " ".join(
+                " ".join(relative_coords(p, ref)) for p in points
+            )
             self.result_3.set(result3_str)
-            log("RESULT #3", result3_str)
+            logging.info(f"RESULT #3: {result3_str}")
 
 
 # === Entry Point ===
