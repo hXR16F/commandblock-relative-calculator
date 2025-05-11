@@ -78,9 +78,9 @@ class RelativeCalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("CMD Block Relative Calculator")
-        self.root.geometry("273x478")
+        # self.root.geometry("273x478")
         self.root.minsize(273, 0)
-        self.root.maxsize(0, 478)
+        # self.root.maxsize(0, 478)
         self.root.attributes('-topmost', True)
         self.root.grid_columnconfigure(0, weight=1)
 
@@ -126,7 +126,7 @@ class RelativeCalculatorApp:
         self.result_3.grid(row=11, column=0, padx=10, pady=5, sticky="we")
 
         ttk.Label(self.root, text="Made with ♥ by zaktabyte").grid(
-            row=12, column=0, sticky="ns", padx=10, pady=(10, 10)
+            row=12, column=0, sticky="ns", padx=10, pady=(10, 16)
         )
 
     def calculate(self):
