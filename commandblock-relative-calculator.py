@@ -11,7 +11,7 @@ from tkinter import ttk
 
 # === Constants ===
 COORDS_PATTERN = r'(-?\d+)[^\d-]+(-?\d+)[^\d-]+(-?\d+)'
-LOG_FILE = "CMD Block - Relative Calculator.log"
+LOG_FILE = "CMD Block Relative Calculator.log"
 
 # === Logging Setup ===
 logging.basicConfig(
@@ -77,7 +77,7 @@ class ResultField(ttk.Frame):
 class RelativeCalculatorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("CMD Block - Relative Calculator")
+        self.root.title("CMD Block Relative Calculator")
         self.root.geometry("273x440")
         self.root.minsize(273, 0)
         self.root.maxsize(0, 440)
