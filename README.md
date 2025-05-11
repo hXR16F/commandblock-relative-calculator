@@ -3,7 +3,7 @@
 	<br>
  	<i>A lightweight desktop application for calculating relative coordinates for Minecraft command blocks.</i>
 	<br><br><br>
-	<img src="https://github.com/user-attachments/assets/c59e5f49-e607-49ba-8326-a2b852473d1f">
+	<img src="https://github.com/user-attachments/assets/bf242e54-fe51-4cf6-bd8d-8ca11f069b01">
 </p>
 
 # CMD Block Relative Calculator
